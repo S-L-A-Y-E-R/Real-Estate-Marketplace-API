@@ -22,9 +22,9 @@ const {
 } = require('../controllers/usersController');
 
 const {
-    updateUserPhoto,
-    resizeUserPhoto
-} = require('../utils/multer');
+    uploadSinglePhoto,
+    resizeSinglePhoto
+} = require('../utils/uploadSinglePhoto');
 
 const router = express.Router();
 
@@ -46,8 +46,8 @@ router.patch('/updatePassword', updatePassword);
 router.post('/logout', logout);
 
 router.patch('/updateMe',
-    updateUserPhoto,
-    resizeUserPhoto,
+    uploadSinglePhoto,
+    resizeSinglePhoto,
     updateMe
 );
 

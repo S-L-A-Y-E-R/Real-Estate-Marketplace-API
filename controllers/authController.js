@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const crypto = require("crypto");
 const catchAsync = require("../utils/catchAsync");
-const User = require("../models/usersmodel");
+const User = require("../models/usermodel");
 const AppError = require("../utils/appError");
 const Email = require("../utils/email");
 
@@ -38,15 +38,14 @@ const createAndSendTokens = (user, res, statusCode) => {
     return {
       expires: new Date(
         Date.now() +
-          `${
-            tokenType === "accessToken"
-              ? process.env.ACCESS_TOKEN_COOKIE_EXPIRES_IN
-              : process.env.REFRESHH_TOKEN_COOKIE_EXPIRES_IN
-          }` *
-            24 *
-            60 *
-            60 *
-            1000
+        `${tokenType === "accessToken"
+          ? process.env.ACCESS_TOKEN_COOKIE_EXPIRES_IN
+          : process.env.REFRESHH_TOKEN_COOKIE_EXPIRES_IN
+        }` *
+        24 *
+        60 *
+        60 *
+        1000
       ),
       httpOnly: true,
       secure: `${process.env.NODE_ENV === "production" ? true : false}`,
