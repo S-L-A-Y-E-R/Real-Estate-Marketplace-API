@@ -19,9 +19,12 @@ const {
     deleteUser,
     updateUser,
     getMe,
+} = require('../controllers/usersController');
+
+const {
     updateUserPhoto,
     resizeUserPhoto
-} = require('../controllers/usersController');
+} = require('../utils/multer');
 
 const router = express.Router();
 
@@ -33,7 +36,7 @@ router.post('/forgotPassword', forgotPassword);
 
 router.patch('/resetPassword/:token', resetPassword);
 
-router.post('/refresh-token',refreshAccessToken)
+router.post('/refresh-token', refreshAccessToken);
 
 //This middleware will protect all the incoming routes
 router.use(protect);

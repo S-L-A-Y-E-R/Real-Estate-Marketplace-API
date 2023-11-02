@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+const userRoutes = require('./routes/usersRoutes');
 
 const app = express();
 
@@ -55,7 +56,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 //Global resources
-
+app.use('/api/v1/users', userRoutes);
 
 // Handle requests from wrong urls
 app.all('*', (req, res, next) => {

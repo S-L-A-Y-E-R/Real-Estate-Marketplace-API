@@ -110,7 +110,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  exports.decoded = await promisify(jwt.verify)(
+  const decoded = await promisify(jwt.verify)(
     accessToken,
     process.env.ACCESS_TOKEN_SECRET
   );
@@ -156,7 +156,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("There is no user with that email", 404));
   }
 
-  const resetToken = user.createResetPasswordAccessToken();
+  const resetToken = user.createResetPasswordToken();
   await user.save({ validateBeforeSave: false });
 
   const resetURL = `${req.protocol}://${req.get(
