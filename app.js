@@ -11,8 +11,12 @@ const compression = require('compression');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/usersRoutes');
+const path = require('path');
 
 const app = express();
+
+//serving static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Enable outsource proxies
 app.set('trust proxy', true);
@@ -25,6 +29,8 @@ app.use(cors({
 
 //Set security http headers
 app.use(helmet());
+
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 //Use morgan logger in the develpment
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));

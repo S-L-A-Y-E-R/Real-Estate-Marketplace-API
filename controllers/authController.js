@@ -93,6 +93,24 @@ exports.login = catchAsync(async (req, res, next) => {
   createAndSendTokens(user, res, 200);
 });
 
+exports.googleLogin = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (user) {
+    createAndSendTokens(user, res, 200);
+  } else {
+    const newUser = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: Math.random().toString(36).slice(-8),
+    });
+
+    await newUser.save({ validateBeforeSave: false });
+
+    createAndSendTokens(newUser, res, 201);
+  }
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
   let accessToken;
 
@@ -135,18 +153,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   next();
 });
-
-exports.restrictTo = (...roles) => {
-  return catchAsync(async (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError("You don't have a permision to perform this action", 403)
-      );
-    }
-
-    next();
-  });
-};
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });

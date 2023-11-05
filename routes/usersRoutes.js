@@ -7,9 +7,9 @@ const {
     forgotPassword,
     resetPassword,
     updatePassword,
-    restrictTo,
     logout,
-    refreshAccessToken
+    refreshAccessToken,
+    googleLogin
 } = require('../controllers/authController');
 const {
     getAllUsers,
@@ -19,12 +19,10 @@ const {
     deleteUser,
     updateUser,
     getMe,
+    getUserPhoto,
+    uploadUserPhoto,
+    resizeUserPhoto,
 } = require('../controllers/usersController');
-
-const {
-    uploadSinglePhoto,
-    resizeSinglePhoto
-} = require('../utils/uploadSinglePhoto');
 
 const router = express.Router();
 
@@ -32,11 +30,15 @@ router.post('/signup', signUp);
 
 router.post('/login', login);
 
+router.post('/google-login', googleLogin);
+
 router.post('/forgotPassword', forgotPassword);
 
 router.patch('/resetPassword/:token', resetPassword);
 
 router.post('/refresh-token', refreshAccessToken);
+
+router.get('/get-photo/:id', getUserPhoto);
 
 //This middleware will protect all the incoming routes
 router.use(protect);
@@ -46,17 +48,14 @@ router.patch('/updatePassword', updatePassword);
 router.post('/logout', logout);
 
 router.patch('/updateMe',
-    uploadSinglePhoto,
-    resizeSinglePhoto,
+    uploadUserPhoto,
+    resizeUserPhoto,
     updateMe
 );
 
 router.delete('/deleteMe', deleteMe);
 
 router.get('/me', getMe, getOneUser);
-
-//This middleware will restrict all the incoming routes
-router.use(restrictTo('admin'));
 
 router.get('/', getAllUsers);
 

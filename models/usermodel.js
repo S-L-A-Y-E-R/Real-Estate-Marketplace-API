@@ -4,17 +4,10 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
-    name: {
+    username: {
         type: String,
         required: [true, 'Please insert your name'],
         trim: true
-    },
-    role: {
-        type: String,
-        enum: {
-            values: ['user', 'admin']
-        },
-        default: 'user'
     },
     email: {
         type: String,
@@ -26,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },
     photo: {
         type: String,
-        default: 'default.jpg'
+        default: 'default.jpeg'
     },
     password: {
         type: String,
@@ -45,6 +38,10 @@ const userSchema = new mongoose.Schema({
         }
     },
     createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    updatedAt: {
         type: Date,
         default: Date.now()
     },
@@ -71,6 +68,12 @@ userSchema.pre('save', function (next) {
     if (!this.isModified('password') || this.isNew) return next();
 
     this.passwordChangedAt = Date.now() - 1000;
+
+    next();
+});
+
+userSchema.pre(/^findOneAnd/, function (next) {
+    this._update.updatedAt = Date.now();
 
     next();
 });
