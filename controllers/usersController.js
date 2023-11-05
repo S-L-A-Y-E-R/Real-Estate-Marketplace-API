@@ -50,27 +50,22 @@ exports.deleteUser = deleteOne(User);
 exports.updateUser = updateOne(User);
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  if (req.body.password || req.body.passowordConfirm) {
-    return next(
-      new AppError(
-        "You are not allowed to update the password using this route"
-      )
-    );
-  }
+  const user = await User.findById(req.user.id).select("+password");
+  const { username, email, password } = req.body;
 
-  const { name, email } = req.body;
-
-  const filteredBody = { name, email };
+  const filteredBody = { username, email, password };
   if (req.file) filteredBody.photo = req.file.filename;
 
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
+  if (filteredBody.username) user.username = filteredBody.username;
+  if (filteredBody.email) user.email = filteredBody.email;
+  if (filteredBody.photo) user.photo = filteredBody.photo;
+  if (filteredBody.password) user.password = filteredBody.password;
+
+  await user.save({ validateBeforeSave: false });
 
   res.status(200).json({
     status: "success",
-    data: updatedUser,
+    data: user,
   });
 });
 

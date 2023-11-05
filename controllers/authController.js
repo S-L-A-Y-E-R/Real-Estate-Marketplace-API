@@ -60,6 +60,7 @@ const createAndSendTokens = (user, res, statusCode) => {
 
   res.status(statusCode).json({
     message: "success",
+    refreshToken,
     accessToken,
     data: {
       user,
@@ -69,7 +70,7 @@ const createAndSendTokens = (user, res, statusCode) => {
 
 exports.signUp = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
-    name: req.body.name,
+    username: req.body.username,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
@@ -100,8 +101,9 @@ exports.googleLogin = catchAsync(async (req, res, next) => {
     createAndSendTokens(user, res, 200);
   } else {
     const newUser = new User({
-      name: req.body.name,
+      username: req.body.username,
       email: req.body.email,
+      photo: req.body.photo,
       password: Math.random().toString(36).slice(-8),
     });
 

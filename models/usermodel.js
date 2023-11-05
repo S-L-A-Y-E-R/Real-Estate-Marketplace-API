@@ -72,7 +72,7 @@ userSchema.pre('save', function (next) {
     next();
 });
 
-userSchema.pre(/^findOneAnd/, function (next) {
+userSchema.pre(/^findOneAndUpdate/, function (next) {
     this._update.updatedAt = Date.now();
 
     next();

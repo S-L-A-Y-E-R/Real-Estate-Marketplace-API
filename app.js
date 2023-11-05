@@ -12,6 +12,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/usersRoutes');
 const path = require('path');
+const listingRoutes = require('./routes/ListingRoutes');
 
 const app = express();
 
@@ -63,6 +64,7 @@ if (process.env.NODE_ENV === 'production') {
 
 //Global resources
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/listing', listingRoutes);
 
 // Handle requests from wrong urls
 app.all('*', (req, res, next) => {
