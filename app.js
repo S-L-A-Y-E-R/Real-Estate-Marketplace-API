@@ -16,6 +16,9 @@ const listingRoutes = require('./routes/ListingRoutes');
 
 const app = express();
 
+//Limit data incoming from the request body
+app.use(express.json());
+
 //serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -41,9 +44,6 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 //   bodyParser.raw({ type: 'application/json' }),
 //   webhookCheckout
 // );
-
-//Limit data incoming from the request body
-app.use(express.json({ limit: '10kb' }));
 
 //Data sanitization agains noSQL query injection
 app.use(mongoSanitize());

@@ -28,18 +28,17 @@ const upload = multer({
 });
 
 exports.uploadListingImages = upload.fields([
-    { name: 'images', maxCount: 3 }
+    { name: 'images', maxCount: 5 }
 ]);
 
 exports.resizeListingImages = catchAsync(async (req, res, next) => {
     if (!req.files.images) return next();
 
-    req.body.images = [];
+    if (!req.body.images) req.body.images = [];
 
     await Promise.all(
         req.files.images.map(async (file, i) => {
-            const filename = `listing-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
-
+            const filename = `listing-${req.user.id}-${Date.now()}-${i + 1}.jpeg`;
             await sharp(file.buffer)
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
@@ -51,6 +50,10 @@ exports.resizeListingImages = catchAsync(async (req, res, next) => {
 
     next();
 });
+
+exports.getListingPhoto = (req, res, next) => {
+    res.download(path.resolve(`${__dirname}/../public/images/listings/${req.params.imageName}`));
+};
 
 exports.createListing = createOne(Listing);
 

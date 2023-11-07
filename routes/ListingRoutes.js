@@ -6,19 +6,26 @@ const {
     deleteListing,
     updateListing,
     uploadListingImages,
-    resizeListingImages
+    resizeListingImages,
+    getListingPhoto,
 } = require('../controllers/listingController');
+const {
+    protect,
+} = require('../controllers/authController');
 
 const router = express.Router();
 
+
 router.route('/')
     .get(getAllListings)
-    .post(createListing);
+    .post(protect, uploadListingImages, resizeListingImages, createListing);
 
 router.
     route('/:id').
     get(getOneListing).
-    patch(uploadListingImages, resizeListingImages, updateListing).
-    delete(deleteListing);
+    patch(protect, uploadListingImages, resizeListingImages, updateListing).
+    delete(protect, deleteListing);
+
+router.get('/:id/listing-image/:imageName', getListingPhoto);
 
 module.exports = router;

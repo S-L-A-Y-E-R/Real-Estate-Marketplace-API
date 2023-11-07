@@ -38,24 +38,23 @@ const listingSchema = new mongoose.Schema({
     },
     furnished: {
         type: Boolean,
-        required: true
+        default: false
     },
     parking: {
         type: Boolean,
-        required: true
+        default: false
     },
     type: {
         type: String,
         required: [true, 'Listing must have a type']
     },
     offer: {
-        type: String,
-        required: [true, 'Listing must have an offer']
+        type: Boolean,
+        default: false
     },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        required: [true, 'Listing must belong to a user']
     },
     createdAt: {
         type: Date,
@@ -71,7 +70,7 @@ const listingSchema = new mongoose.Schema({
 listingSchema.pre(/^findOne/, function (next) {
     this.populate({
         path: 'user',
-        select: 'name photo'
+        select: 'username photo'
     });
     next();
 });
