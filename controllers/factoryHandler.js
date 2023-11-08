@@ -74,9 +74,10 @@ exports.getAll = (Model) =>
       .filter()
       .limitFields()
       .paginate()
-      .sort();
+      .sort()
+      ;
 
-    const doc = await features.query;
+    const doc = await features.query.find({ name: { $regex: req.query.name, $options: 'i' } });
 
     res.status(200).json({
       status: "success",
